@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.7.0
+Created-By: 1.5.0_15-b04 (Sun Microsystems Inc.)
+Built-By: shk3
+
+Name: common
+Specification-Title: JChemPaint
+Specification-Version: 1.0
+Specification-Vendor: The CDK Project
+Implementation-Title: org.openscience.cdk
+Implementation-Version: 3.0.1
+Implementation-Vendor: The CDK Project
+

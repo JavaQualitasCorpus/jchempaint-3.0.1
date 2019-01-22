@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry excluding="org/openscience/cdk/structgen/deterministic/DeterministicGenerator.java" kind="src" path="src/main"/>
+	<classpathentry kind="src" path="src/test"/>
+	<classpathentry exported="true" kind="lib" path="jar/jgrapht-0.6.0.jar" sourcepath="cdksrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="jar/jniinchi-0.5.jar" sourcepath="cdksrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="jar/JRI.jar" sourcepath="cdksrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="jar/sjava-0.68.jar" sourcepath="cdksrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="jar/vecmath1.2-1.14.jar" sourcepath="cdksrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="jar/xom-1.1.jar" sourcepath="cdksrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="jar/jama-1.0.2.jar" sourcepath="cdksrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="jar/commons-cli-1.0.jar" sourcepath="org.openscience.cdksrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="jar/xml-apis.jar" sourcepath="org.openscience.cdksrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="jar/xpp3-1.1.4c.jar" sourcepath="org.openscience.cdksrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="jar/log4j.jar" sourcepath="org.openscience.cdksrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="jar/xercesImpl-2.9.0.jar" sourcepath="org.openscience.cdksrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="develjar/com-sun-javadoc.jar" sourcepath="org.openscience.cdksrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="develjar/com-sun-tools-doclets-Taglet.jar" sourcepath="org.openscience.cdksrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="develjar/junit-4.5.jar"/>
+	<classpathentry kind="lib" path="jar/cmlxom-2.5-b1.jar"/>
+	<classpathentry kind="lib" path="develjar/ojdcheck.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

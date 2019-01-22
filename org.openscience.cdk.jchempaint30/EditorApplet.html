@@ -1,0 +1,40 @@
+<html>
+<head>
+<META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+<title>The JChemPaint Applet Demo</title>
+</head>
+<body BGCOLOR="#ffffff" LINK="#000099">
+
+<h2>
+The JChemPaint Applet
+</h2>
+
+<applet code="org.openscience.jchempaint.applet.JChemPaintEditorApplet" archive="dist/jar/jchempaint-applet-core.jar"
+    		name="Editor" width="600" height="500">
+
+  <param name="impliciths" value="true">
+  <param name="codebase_lookup" value="false" />
+  <PARAM name="onLoadTarget" value="statusFrame">
+  <PARAM NAME="image" VALUE="hourglass.gif">
+  <PARAM NAME="boxborder" VALUE="false">
+  <PARAM NAME="centerimage" VALUE="true">
+  <!--param name="load" value="applettests/big.mol"-->
+
+</applet>
+<BR><BR>
+<a href="javascript:alert(document.Editor.getMolFile())">show mol file</a>
+<a href="javascript:alert(document.Editor.getSmiles())">show smiles</a>
+<a href="javascript:alert(document.Editor.getSmilesChiral())">show stereo smiles</a>
+<a href="javascript:document.Editor.makeHydrogensExplicit()">Make hydrogens explicit</a>
+<a href="javascript:document.Editor.clear()">clear</a>
+<a href="javascript:document.Editor.setMolFile('\n  CDK    1/19/07,10:3\n\n  2  1  0  0  0  0  0  0  0  0999 V2000 \n  2.520000 10.220000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n  2.270000 10.470000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n  2  1  1  0  0  0  0 \nM  END')">insert CC (as mol file)</a>
+<a href="javascript:document.Editor.setSmiles('CCC')">insert CCC (as SMILES)</a>
+<blockquote>
+<hr>
+
+</body>
+</html>
+
+
+

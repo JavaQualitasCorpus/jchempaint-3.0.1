@@ -1,0 +1,13 @@
+cdk-annotation.jar
+cdk-core.jar
+cdk-data.jar
+cdk-nonotify.jar
+cdk-interfaces.jar
+cdk-io.jar
+cdk-qsar.jar
+cdk-standard.jar
+cdk-charges.jar
+cdk-forcefield.jar
+cdk-valencycheck.jar
+cdk-smiles.jar
+cdk-isomorphism.jar

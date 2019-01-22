@@ -1,0 +1,205 @@
+From 4ba20430a9068a46cbd30adc89991edcde355517 Mon Sep 17 00:00:00 2001
+From: Stefan Kuhn <Stefan.Kuhn@ebi.ac.uk>
+Date: Tue, 12 Jan 2010 14:03:21 +0000
+Subject: [PATCH] Atom-Atom-Mapping is now read and written in MDL files. Note the reading
+ until now was into ID field, which is not in line with description of ID
+ field in ChemObject (Returns the identifier (ID) of this object). Also
+ added tests for MDLWriter/Reader/2000Reader.
+
+---
+ src/main/org/openscience/cdk/CDKConstants.java     |    2 +
+ src/main/org/openscience/cdk/io/MDLReader.java     |    2 +-
+ .../org/openscience/cdk/io/MDLV2000Reader.java     |    2 +-
+ src/main/org/openscience/cdk/io/MDLWriter.java     |   10 +++++++-
+ .../data/mdl/a-pinene-with-atom-atom-mapping.mol   |   26 ++++++++++++++++++++
+ src/test/org/openscience/cdk/io/MDLReaderTest.java |   15 +++++++++++
+ .../org/openscience/cdk/io/MDLV2000ReaderTest.java |   13 ++++++++++
+ src/test/org/openscience/cdk/io/MDLWriterTest.java |   13 ++++++++++
+ 8 files changed, 80 insertions(+), 3 deletions(-)
+ create mode 100644 src/test/data/mdl/a-pinene-with-atom-atom-mapping.mol
+
+diff --git a/src/main/org/openscience/cdk/CDKConstants.java b/src/main/org/openscience/cdk/CDKConstants.java
+index fd66b4e..6ad1b16 100644
+--- a/src/main/org/openscience/cdk/CDKConstants.java
++++ b/src/main/org/openscience/cdk/CDKConstants.java
+@@ -285,6 +285,8 @@ public class CDKConstants {
+       */
+     public static final String ISOTROPIC_SHIELDING = "cdk:IsotropicShielding";
+ 
++    public static final String ATOM_ATOM_MAPPING = "cdk:AtomAtomMapping";
++
+     /****************************************
+     * Some predefined property names for    *
+     * AtomTypes                             *
+diff --git a/src/main/org/openscience/cdk/io/MDLReader.java b/src/main/org/openscience/cdk/io/MDLReader.java
+index 113144d..18872b4 100644
+--- a/src/main/org/openscience/cdk/io/MDLReader.java
++++ b/src/main/org/openscience/cdk/io/MDLReader.java
+@@ -460,7 +460,7 @@ public class MDLReader extends DefaultChemObjectReader {
+                     try {
+                         int reactionAtomID = Integer.parseInt(reactionAtomIDString);
+                         if (reactionAtomID != 0) {
+-                            atom.setID(reactionAtomIDString);
++                            atom.setProperty(CDKConstants.ATOM_ATOM_MAPPING, reactionAtomIDString);
+                         }
+                     } catch (Exception exception) {
+                         logger.error("Mapping number ", reactionAtomIDString, " is not an integer.");
+diff --git a/src/main/org/openscience/cdk/io/MDLV2000Reader.java b/src/main/org/openscience/cdk/io/MDLV2000Reader.java
+index a51552f..9eff91b 100644
+--- a/src/main/org/openscience/cdk/io/MDLV2000Reader.java
++++ b/src/main/org/openscience/cdk/io/MDLV2000Reader.java
+@@ -517,7 +517,7 @@ public class MDLV2000Reader extends DefaultChemObjectReader {
+                     try {
+                         int reactionAtomID = Integer.parseInt(reactionAtomIDString);
+                         if (reactionAtomID != 0) {
+-                            atom.setID(reactionAtomIDString);
++                            atom.setProperty(CDKConstants.ATOM_ATOM_MAPPING, reactionAtomID);
+                         }
+                     } catch (Exception exception) {
+                         logger.error("Mapping number ", reactionAtomIDString, " is not an integer.");
+diff --git a/src/main/org/openscience/cdk/io/MDLWriter.java b/src/main/org/openscience/cdk/io/MDLWriter.java
+index df03a24..328db3a 100644
+--- a/src/main/org/openscience/cdk/io/MDLWriter.java
++++ b/src/main/org/openscience/cdk/io/MDLWriter.java
+@@ -278,7 +278,15 @@ public class MDLWriter extends DefaultChemObjectWriter {
+         		line += formatMDLInt(15, 3);
+         	else
+         		line += formatMDLInt(atom.getValency(), 3);
+-        	line += "  0  0  0  0  0  0";
++        	line += "  0  0  0";
++        	
++        	if (container.getAtom(f).getProperty(CDKConstants.ATOM_ATOM_MAPPING) != null) {
++        	    int value = ((Integer)container.getAtom(f).getProperty(CDKConstants.ATOM_ATOM_MAPPING)).intValue();
++        	    line += formatMDLInt(value, 3);
++       	    } else {
++        	    line += formatMDLInt(0, 3);
++        	}
++      	    line += "  0  0";
+         	writer.write(line);
+         	writer.newLine();
+         }
+diff --git a/src/test/data/mdl/a-pinene-with-atom-atom-mapping.mol b/src/test/data/mdl/a-pinene-with-atom-atom-mapping.mol
+new file mode 100644
+index 0000000..227e9a0
+--- /dev/null
++++ b/src/test/data/mdl/a-pinene-with-atom-atom-mapping.mol
+@@ -0,0 +1,26 @@
++a-pinen.mol
++  ChemDraw08319810042D
++
++ 10 11  0  0  0  0  0  0  0  0  1 V2000
++   -2.0500   -1.1000    0.0000 C   0  0  0  0  0  0  0  0  0  1  0  0
++   -0.7500   -0.3500    0.0000 C   0  0  0  0  0  0  0  0  0 15  0  0
++   -0.5500   -1.1000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
++    0.7500   -1.8500    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
++    0.7500   -0.3500    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
++    1.8100   -1.4100    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
++   -0.3625    1.1000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
++    2.0500    0.4000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
++    0.9375    1.8500    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
++   -1.6625    1.8500    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
++  1  2  1  0  0  0  0
++  1  3  1  0  0  0  0
++  3  4  1  0  0  0  0
++  2  5  1  0  0  0  0
++  5  6  2  0  0  0  0
++  4  6  1  0  0  0  0
++  2  7  1  0  0  0  0
++  3  7  1  0  0  0  0
++  5  8  1  0  0  0  0
++  7  9  1  0  0  0  0
++  7 10  1  0  0  0  0
++M  END
+diff --git a/src/test/org/openscience/cdk/io/MDLReaderTest.java b/src/test/org/openscience/cdk/io/MDLReaderTest.java
+index e7a7286..2606117 100644
+--- a/src/test/org/openscience/cdk/io/MDLReaderTest.java
++++ b/src/test/org/openscience/cdk/io/MDLReaderTest.java
+@@ -31,9 +31,11 @@ import java.util.List;
+ import org.junit.Assert;
+ import org.junit.BeforeClass;
+ import org.junit.Test;
++import org.openscience.cdk.CDKConstants;
+ import org.openscience.cdk.ChemFile;
+ import org.openscience.cdk.ChemModel;
+ import org.openscience.cdk.ChemObject;
++import org.openscience.cdk.DefaultChemObjectBuilder;
+ import org.openscience.cdk.Molecule;
+ import org.openscience.cdk.interfaces.IAtom;
+ import org.openscience.cdk.interfaces.IAtomContainer;
+@@ -205,5 +207,18 @@ public class MDLReaderTest extends SimpleChemObjectReaderTest {
+         Assert.assertEquals(IBond.Stereo.E_OR_Z,mol.getBond(7).getStereo());
+         Assert.assertEquals(IBond.Stereo.UP_OR_DOWN,mol.getBond(11).getStereo());
+     }
++
+     
++    @Test public void testReadAtomAtomMapping() throws Exception {
++        String filename = "data/mdl/a-pinene-with-atom-atom-mapping.mol";
++        logger.info("Testing: " + filename);
++        InputStream ins = this.getClass().getClassLoader().getResourceAsStream(filename);
++        MDLV2000Reader reader = new MDLV2000Reader(ins);
++     
++        IMolecule mol = (IMolecule) reader.read(DefaultChemObjectBuilder.getInstance().newMolecule());
++        Assert.assertNotNull(mol);
++        Assert.assertEquals(1, ((Integer)mol.getAtom(0).getProperty(CDKConstants.ATOM_ATOM_MAPPING)).intValue());
++        Assert.assertEquals(15, ((Integer)mol.getAtom(1).getProperty(CDKConstants.ATOM_ATOM_MAPPING)).intValue());
++        Assert.assertNull(mol.getAtom(2).getProperty(CDKConstants.ATOM_ATOM_MAPPING));
++    }
+ }
+diff --git a/src/test/org/openscience/cdk/io/MDLV2000ReaderTest.java b/src/test/org/openscience/cdk/io/MDLV2000ReaderTest.java
+index 23278d8..5bdda05 100644
+--- a/src/test/org/openscience/cdk/io/MDLV2000ReaderTest.java
++++ b/src/test/org/openscience/cdk/io/MDLV2000ReaderTest.java
+@@ -671,6 +671,19 @@ public class MDLV2000ReaderTest extends SimpleChemObjectReaderTest {
+         Assert.assertNull(mol.getAtom(2).getValency());
+         Assert.assertEquals(0, mol.getAtom(3).getValency().intValue());
+     }
++    
++    @Test public void testReadAtomAtomMapping() throws Exception {
++        String filename = "data/mdl/a-pinene-with-atom-atom-mapping.mol";
++        logger.info("Testing: " + filename);
++        InputStream ins = this.getClass().getClassLoader().getResourceAsStream(filename);
++        MDLV2000Reader reader = new MDLV2000Reader(ins);
++     
++        IMolecule mol = (IMolecule) reader.read(DefaultChemObjectBuilder.getInstance().newMolecule());
++        Assert.assertNotNull(mol);
++        Assert.assertEquals(1, ((Integer)mol.getAtom(0).getProperty(CDKConstants.ATOM_ATOM_MAPPING)).intValue());
++        Assert.assertEquals(15, ((Integer)mol.getAtom(1).getProperty(CDKConstants.ATOM_ATOM_MAPPING)).intValue());
++        Assert.assertNull(mol.getAtom(2).getProperty(CDKConstants.ATOM_ATOM_MAPPING));
++    }
+ 
+     @Test(expected=CDKException.class)
+     public void testShortLines() throws Exception {
+diff --git a/src/test/org/openscience/cdk/io/MDLWriterTest.java b/src/test/org/openscience/cdk/io/MDLWriterTest.java
+index 1c51976..aef3e41 100644
+--- a/src/test/org/openscience/cdk/io/MDLWriterTest.java
++++ b/src/test/org/openscience/cdk/io/MDLWriterTest.java
+@@ -35,6 +35,7 @@ import org.junit.BeforeClass;
+ import org.junit.Test;
+ import org.openscience.cdk.Atom;
+ import org.openscience.cdk.AtomContainer;
++import org.openscience.cdk.CDKConstants;
+ import org.openscience.cdk.ChemFile;
+ import org.openscience.cdk.ChemModel;
+ import org.openscience.cdk.DefaultChemObjectBuilder;
+@@ -116,6 +117,18 @@ public class MDLWriterTest extends ChemObjectIOTest {
+         Assert.assertTrue(output.indexOf("0  0  0  0  0 15  0  0  0  0  0  0") != -1);
+     }
+     
++    @Test public void testWriteAtomAtomMapping() throws Exception {
++        StringWriter writer = new StringWriter();
++        Molecule molecule = MoleculeFactory.makeAlphaPinene();
++        molecule.getAtom(0).setProperty(CDKConstants.ATOM_ATOM_MAPPING,1);
++        molecule.getAtom(1).setProperty(CDKConstants.ATOM_ATOM_MAPPING,15);
++        MDLWriter mdlWriter = new MDLWriter(writer);
++        mdlWriter.write(molecule);
++        String output = writer.toString();
++        Assert.assertTrue(output.indexOf("0  0  0  0  0  0  0  0  0  1  0  0") != -1);
++        Assert.assertTrue(output.indexOf("0  0  0  0  0  0  0  0  0 15  0  0") != -1);
++    }
++    
+     /**
+      * Test for bug #1778479 "MDLWriter writes empty PseudoAtom label string".
+      * When a molecule contains an IPseudoAtom without specifying the atom label
+-- 
+1.5.4.3
+
